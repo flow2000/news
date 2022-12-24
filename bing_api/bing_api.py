@@ -3,7 +3,7 @@ import json
 import time
 
 
-API='https://cn.bing.com/HPImageArchive.aspx?n=7&format=js&idx=0'
+API='https://bing.com/HPImageArchive.aspx?n=7&format=js&idx=0&mkt=zh-CN'
 headers={
     'Access-Control-Allow-Origin':'*',
     'Access-Control-Allow-Headers':'Content-Type',
