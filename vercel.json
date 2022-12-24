@@ -1,0 +1,30 @@
+{
+    "version": 2,
+    "public": true,
+    "routes": [
+        {
+            "src": "/version",
+            "dest": "api/main.py"
+        },
+        {
+            "src": "/60s",
+            "dest": "api/main.py"
+        },
+        {
+            "src": "/weibo",
+            "dest": "api/main.py"
+        },
+        {
+            "src": "/bili",
+            "dest": "api/main.py"
+        },
+        {
+            "src": "/docs",
+            "dest": "api/main.py"
+        },
+        {
+            "src": "/openapi.json",
+            "dest": "api/main.py"
+        }
+    ]
+}
