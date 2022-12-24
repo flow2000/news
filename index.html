@@ -28,9 +28,12 @@
 <body class='typora-export os-windows'>
   <div class='typora-export-content'>
     <div id='write' class=''>
-      <h1>
-        <center>每日早报</center>
+      <h1 id="news_title" style="text-align: center;">
+        每日早报
       </h1>
+      <a onclick="bing_click()">
+        <img id='bing' src="">
+      </a>
       <blockquote>
         <center>
           <div id="date">202X年X月X日 星期X 农历X月XX XXXX</div>
@@ -63,11 +66,14 @@
         <table>
           <thead>
             <tr>
-              <th>
-                <center><button class="button" onclick="before()"><span class="text">前一天</span></button></center>
+              <th class="before_btn">
+                <center><button class="button" onclick="before()"><span>前一天</span></button></center>
               </th>
               <th>
-                <center><button class="button" onclick="after()"><span class="text">后一天</span></button></center>
+                <center><button class="button" onclick="change_origin()"><span class="switch_btn">切换至微博热搜</span></button></center>
+              </th>
+              <th class="after_btn">
+                <center><button class="button" onclick="after()"><span>后一天</span></button></center>
               </th>
             </tr>
           </thead>

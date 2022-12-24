@@ -2,6 +2,12 @@
 let offset = 0
 //获取新闻API，可根据部署域名更换
 let NEWS_API = "https://news.panghai.top/60s"
+//壁纸API
+let BINGAPI = "http://news.panghai.top/bing"
+//微博热搜API
+let WEIBOAPI = "https://news.panghai.top/weibo"
+//B站热搜API
+let BILIAPI = "https://news.panghai.top/bili"
 
 //js入口
 get_day_news(offset);
@@ -9,12 +15,33 @@ get_day_news(offset);
 //获取新闻
 function get_day_news(offset) {
     NProgress.start();
+    // 获取壁纸
+    axios.get(`${BINGAPI}`)
+        .then(function (response) {
+            bing_list = response.data.data
+            //加载壁纸
+            document.getElementById('bing').src = bing_list[offset].url
+        })
+        .catch(function (error) {
+            Notiflix.Notify.failure(`获取壁纸数据失败\uD83D\uDE1E，请点击跳转至问题反馈`, function () {
+                window.open("https://github.com/flow2000/news/issues/new")
+            });
+            NProgress.done()
+            console.log(error);
+        });
+
     axios.get(`${NEWS_API}?offset=${offset}`)
         .then(function (response) {
             load_day_news(response.data)
+            //保存当前时间(12月24日，农历腊月初二，星期六！)
+            if (offset === 0) {
+                localStorage.setItem('current_time', response.data.data.time)
+            }
         })
         .catch(function (error) {
-            Notiflix.Notify.failure(`当天新闻获取失败，尝试获取前一天 \uD83D\uDE1E`);
+            Notiflix.Notify.failure(`获取壁纸数据失败\uD83D\uDE1E，请点击跳转至问题反馈`, function () {
+                window.open("https://github.com/flow2000/news/issues/new")
+            });
             NProgress.done()
             console.log(error);
         });
@@ -22,6 +49,8 @@ function get_day_news(offset) {
 
 //加载新闻
 function load_day_news(data) {
+    //切换按钮文字
+    btn_text = document.getElementsByClassName("switch_btn")[0].innerText
     try {
         NProgress.done();
         if (data['data']) {
@@ -60,7 +89,11 @@ function load_day_news(data) {
                 } else if (n[2] === '、') {
                     n = n.substring(3);
                 }
-                li.innerHTML = n;
+                if (btn_text !== '切换至微博热搜') {
+                    li.innerHTML = `<a href=${data['urls'][i]} target='_blank'>${n}</a>`;
+                } else {
+                    li.innerHTML = n;
+                }
                 // 插入新的 li
                 document.getElementById('news').appendChild(li);
             }
@@ -97,6 +130,76 @@ function before() {
         offset += 1;
         direction = 'after';
         get_day_news(offset);
+    }
+}
+
+//切换新闻
+function change_origin() {
+    current_time = localStorage.getItem("current_time")
+    btn_text = document.getElementsByClassName("switch_btn")[0].innerText
+    if (btn_text === '切换至微博热搜') {
+        NProgress.start();
+        axios.get(WEIBOAPI)
+            .then(function (response) {
+                var data = response.data
+                var news_data = {}
+                var news_title = []
+                var news_url = []
+                for (let i = 0; i < data['data'].length; i++) {
+                    news_title.push(data['data'][i].title)
+                    news_url.push(data['data'][i].url)
+                }
+                news_data['news'] = news_title
+                news_data['urls'] = news_url
+                news_data['time'] = current_time
+                news_data['topic'] = '微博热搜'
+                news_data['weiyu'] = ''
+                data['data'] = news_data
+                load_day_news(data)
+            })
+            .catch(function (error) {
+                Notiflix.Notify.failure(`微博热搜获取失败\uD83D\uDE1E，请点击跳转至问题反馈`, function () {
+                    window.open("https://github.com/flow2000/news/issues/new")
+                });
+                NProgress.done()
+                console.log(error);
+            });
+        document.getElementById("news_title").innerText = '微博热搜'
+        document.getElementsByClassName("before_btn")[0].style.display = "none";
+        document.getElementsByClassName("after_btn")[0].style.display = "none";
+        document.getElementsByClassName("switch_btn")[0].innerText = '切换至B站热搜'
+    } else if (btn_text === '切换至B站热搜') {
+        axios.get(BILIAPI)
+            .then(function (response) {
+                var data = response.data
+                var news_data = {}
+                var news_title = []
+                var news_url = []
+                for (let i = 0; i < data['data'].length; i++) {
+                    news_title.push(data['data'][i].title)
+                    news_url.push(data['data'][i].url)
+                }
+                news_data['news'] = news_title
+                news_data['urls'] = news_url
+                news_data['time'] = current_time
+                news_data['topic'] = 'B站热搜'
+                news_data['weiyu'] = ''
+                data['data'] = news_data
+                load_day_news(data)
+            })
+            .catch(function (error) {
+                Notiflix.Notify.failure(`B站热搜获取失败\uD83D\uDE1E，请点击跳转至问题反馈`, function () {
+                    window.open("https://github.com/flow2000/news/issues/new")
+                });
+                NProgress.done()
+                console.log(error);
+            });
+        document.getElementById("news_title").innerText = 'B站热搜'
+        document.getElementsByClassName("before_btn")[0].style.display = "none";
+        document.getElementsByClassName("after_btn")[0].style.display = "none";
+        document.getElementsByClassName("switch_btn")[0].innerText = '切换至每日早报'
+    } else if (btn_text === '切换至每日早报') {
+        location.reload()
     }
 }
 

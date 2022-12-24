@@ -22,9 +22,10 @@ sys.path.append(BASE_DIR)
 from weibo_api import weibo_api
 from bili_api import bili_api
 from sixty_api import sixty_api
+from bing_api import bing_api
 from api import FlowResponse
 
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 app = FastAPI()
 
@@ -94,6 +95,17 @@ async def sixty(offset: int = 0):
     - offset:偏移量（可选参数：0,1,2,3），默认0表示今天，1表示昨天，2表示前天，3表示大前天。
     '''
     res=sixty_api.get_topic(offset)
+    if res!=None:
+        return FlowResponse.success(data=res)
+    else:
+        return FlowResponse.error('系统发生错误')
+
+@app.get("/bing",tags=["必应壁纸API"], summary="获取必应壁纸json数据")
+async def bili():
+    '''
+    必应壁纸API
+    '''
+    res=bing_api.get_bing()
     if res!=None:
         return FlowResponse.success(data=res)
     else:
