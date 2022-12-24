@@ -3,7 +3,7 @@ let offset = 0
 //获取新闻API，可根据部署域名更换
 let NEWS_API = "https://news.panghai.top/60s"
 //壁纸API
-let BINGAPI = "http://news.panghai.top/bing"
+let BINGAPI = "https://news.panghai.top/bing"
 //微博热搜API
 let WEIBOAPI = "https://news.panghai.top/weibo"
 //B站热搜API
