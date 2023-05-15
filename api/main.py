@@ -52,7 +52,7 @@ async def index():
     '''
     latest_version=""
     try:
-        latest_version=requests.get('https://static.panghai.top/txt/version/news.txt',timeout=3).text
+        latest_version=requests.get('https://static.aqcoder.cn/txt/version/news.txt',timeout=3).text
     except Exception as e:
         print(e)
         return FlowResponse.error(msg="NEWSAPI获取不到最新版本，但仍可使用，请联系：https://github.com/flow2000/news",data={"current_version":VERSION})
@@ -60,7 +60,7 @@ async def index():
         "current_version":VERSION,
         "latest_version":latest_version
     }
-    return FlowResponse.success(msg="news部署成功，查看接口文档：https://news.panghai.top/docs",data=data)
+    return FlowResponse.success(msg="news部署成功，查看接口文档：https://news.aqcoder.cn/docs",data=data)
 
 async def fetch(session, url):
     async with session.get(url, verify_ssl=False) as response:
